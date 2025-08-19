@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mood Tracker</title>
+</head>
+<body>
+  <h1>Mood Tracker</h1>
+
+  <form method="POST">
+    <input type="text" name="mood" placeholder="How are you feeling?" required>
+    <button type="submit">Add Mood</button>
+  </form>
+
+  <h2>Previous moods</h2>
+  <ul>
+    {% for m in moods %}
+      <li>{{ m }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

@@ -1,14 +1,23 @@
-from flask import Flask, request, render_template_string, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for
 import json
 import os 
 app= Flask(__name__)
-DATA_FILE = "mooduri.json"
+DATA_FILE = "moods.json"
 
-if os.path.exists(DATA_FILE):
-    with open(DATA_FILE, "r") as f:
-        moods = json.load(f)
-else:
-    moods = []
+moods = []
+
+def load_moods():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as f:
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                return []
+    return[]
+
+def save_moods():
+    with open(DATA_FILE,"w") as f:
+        json.dump(moods, f)
 
 @app.route("/", methods=["GET","POST"])
 def home():
@@ -21,17 +30,20 @@ def home():
                 json.dump(moods, f)
         return redirect(url_for("home"))
 
-    return render_template_string("""
-        <h1>Mood Tracker</h1>
-        <form method="POST">
-            <input type"text" name="mood" placeholder="How are you feeling?">
-            <button type="submit"> Add Mood</button>
-        </form>
-        <ul>
-        {% for m in moods%}
-            <li>{{ m }}</li>
-        {% endfor %}
-        </ul>
-    """, moods=moods)
-if __name__ == "__main__":
+    return render_template("home.html", moods=moods)
+
+@app.route("/mood/<mood_name>")
+def add_mood(mood_name):
+    global moods
+    if mood_name:
+        moods.append(mood_name)
+        save_moods()
+    return redirect(url_for("home"))
+
+def main():
+    global moods
+    moods = load_moods()
     app.run(debug=True)
+
+if __name__ == "__main__":
+    main()
