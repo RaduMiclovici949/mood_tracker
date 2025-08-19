@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for
 import json
 import os 
 app= Flask(__name__)
+
 DATA_FILE = "moods.json"
 
 moods = []
@@ -13,15 +14,14 @@ def load_moods():
                 return json.load(f)
             except json.JSONDecodeError:
                 return []
-    return[]
+    return []
 
 def save_moods():
-    with open(DATA_FILE,"w") as f:
+    with open(DATA_FILE, "w") as f:
         json.dump(moods, f)
 
 @app.route("/", methods=["GET","POST"])
 def home():
-    global moods
     if request.method == "POST":
         mood = request.form.get("mood")
         if mood:
@@ -32,10 +32,10 @@ def home():
 
 @app.route("/mood/<mood_name>")
 def add_mood(mood_name):
-    global moods
     if mood_name:
         moods.append(mood_name)
         save_moods()
+
     return render_template("home.html", moods=moods)
 
 def main():
