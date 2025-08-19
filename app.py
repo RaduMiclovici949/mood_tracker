@@ -25,9 +25,7 @@ def home():
     if request.method == "POST":
         mood = request.form.get("mood")
         if mood:
-            moods.append(mood)
-            with open(DATA_FILE, "w") as f:
-                json.dump(moods, f)
+            return redirect(url_for("add_mood", mood_name=mood))
         return redirect(url_for("home"))
 
     return render_template("home.html", moods=moods)
@@ -38,7 +36,7 @@ def add_mood(mood_name):
     if mood_name:
         moods.append(mood_name)
         save_moods()
-    return redirect(url_for("home"))
+    return render_template("home.html", moods=moods)
 
 def main():
     global moods
