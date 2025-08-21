@@ -1,6 +1,8 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 import json
-import os 
+import os
+from report import generate_moods_report
+
 app= Flask(__name__)
 
 DATA_FILE = "moods.json"
@@ -37,6 +39,11 @@ def add_mood(mood_name):
         save_moods()
 
     return render_template("home.html", moods=moods)
+
+@app.route("/report")
+def report():
+    distribution, path = generate_moods_report()
+    return jsonify(distribution)
 
 def main():
     global moods
