@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, jsonify
+from flask import Flask, request, render_template, redirect, url_for, jsonify, send_file
 import json
 import os
 from report import generate_moods_report
@@ -49,6 +49,17 @@ def add_mood(mood_name):
 def report():
     distribution, path = generate_moods_report()
     return jsonify(distribution)
+
+
+@app.route("/report/download")
+def download_report():
+    distribution, path = generate_moods_report(data_file=DATA_FILE)
+    return send_file(
+        path,
+        mimetype="application/json",
+        as_attachment=True,
+        download_name=os.path.basename(path),
+    )
 
 
 def main():
