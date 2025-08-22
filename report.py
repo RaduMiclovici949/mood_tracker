@@ -33,12 +33,6 @@ def generate_moods_report(data_file="moods.json", output_dir=".", now=None):
     ts = now or datetime.now().replace(microsecond=0).isoformat()
     out_path = os.path.join(output_dir, f"moods-report-{ts}.json")
 
-    try:
-        f = open(out_path, "w")
-        json.dump(distribution, f, indent=2)
-    finally:
-        f.close()
-
     with open(out_path, "w") as f:
         json.dump(distribution, f, indent=2)
 
