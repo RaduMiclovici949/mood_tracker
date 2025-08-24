@@ -12,6 +12,9 @@
     <button type="submit">Add Mood</button>
   </form>
 
+  <form method="GET" action="{{ url_for('download_report') }}">
+    <button type="submit"> Download report </button>
+  </form>
   <h2>Previous moods</h2>
   <ul>
     {% for m in moods %}
